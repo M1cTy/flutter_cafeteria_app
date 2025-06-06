@@ -37,9 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // 仮の商品データ
   static const List<List<Map<String, String>>> _menus = [
     [
-      {'image': '../assets/images/menu1.png', 'name': '唐揚げ定食', 'price': '¥600'},
-      {'image': '../assets/images/menu1.png', 'name': 'カツ丼', 'price': '¥650'},
-      {'image': '../assets/images/menu1.png', 'name': '親子丼', 'price': '¥550'},
+      {'image': 'assets/images/menu1.png', 'name': '唐揚げ定食', 'price': '¥600'},
+      {'image': 'assets/images/menu1.png', 'name': 'カツ丼', 'price': '¥650'},
+      {'image': 'assets/images/menu1.png', 'name': '親子丼', 'price': '¥550'},
       {
         'image': '../assets/images/menu1.png',
         'name': '味噌汁セット',
@@ -49,26 +49,66 @@ class _HomeScreenState extends State<HomeScreen> {
     // 他の店舗も同様にデータを追加
     [
       {'image': '../assets/images/menu1.png', 'name': 'タコライス', 'price': '¥700'},
-      {'image': '../assets/images/menu1.png', 'name': 'ガパオライス', 'price': '¥750'},
-      {'image': '../assets/images/menu1.png', 'name': 'グリーンカレー', 'price': '¥800'},
-      {'image': '../assets/images/menu1.png', 'name': 'サラダボウル', 'price': '¥500'},
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'ガパオライス',
+        'price': '¥750',
+      },
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'グリーンカレー',
+        'price': '¥800',
+      },
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'サラダボウル',
+        'price': '¥500',
+      },
     ],
     [
-      {'image': '../assets/images/menu1.png', 'name': '醤油ラーメン', 'price': '¥600'},
-      {'image': '../assets/images/menu1.png', 'name': '味噌ラーメン', 'price': '¥650'},
+      {
+        'image': '../assets/images/menu1.png',
+        'name': '醤油ラーメン',
+        'price': '¥600',
+      },
+      {
+        'image': '../assets/images/menu1.png',
+        'name': '味噌ラーメン',
+        'price': '¥650',
+      },
       {'image': '../assets/images/menu1.png', 'name': 'チャーハン', 'price': '¥550'},
       {'image': '../assets/images/menu1.png', 'name': '餃子セット', 'price': '¥300'},
     ],
     [
       {'image': '../assets/images/menu1.png', 'name': 'カフェラテ', 'price': '¥350'},
-      {'image': '../assets/images/menu1.png', 'name': 'サンドイッチ', 'price': '¥400'},
-      {'image': '../assets/images/menu1.png', 'name': 'ケーキセット', 'price': '¥600'},
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'サンドイッチ',
+        'price': '¥400',
+      },
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'ケーキセット',
+        'price': '¥600',
+      },
       {'image': '../assets/images/menu1.png', 'name': '紅茶', 'price': '¥300'},
     ],
     [
-      {'image': '../assets/images/menu1.png', 'name': 'マルゲリータピザ', 'price': '¥900',},
-      {'image': '../assets/images/menu1.png', 'name': 'カルボナーラ', 'price': '¥850'},
-      {'image': '../assets/images/menu1.png', 'name': 'ミートソースパスタ', 'price': '¥800'},
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'マルゲリータピザ',
+        'price': '¥900',
+      },
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'カルボナーラ',
+        'price': '¥850',
+      },
+      {
+        'image': '../assets/images/menu1.png',
+        'name': 'ミートソースパスタ',
+        'price': '¥800',
+      },
       {'image': '../assets/images/menu1.png', 'name': 'サラダ', 'price': '¥400'},
     ],
   ];
@@ -96,12 +136,13 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
             Expanded(
               child: GridView.builder(
+                key: ValueKey<int>(_selectedIndex),
                 itemCount: menus.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
-                  childAspectRatio: 1.5, // 高さを揃える
+                  childAspectRatio: 1.5,
                 ),
                 itemBuilder: (context, index) {
                   final menu = menus[index];
@@ -118,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {},
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start, // 追加: 左揃え
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: ClipRRect(
@@ -152,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
                             ),
-                            textAlign: TextAlign.left, // 念のため
+                            textAlign: TextAlign.left,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -173,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.waves), label: 'バブレストラン',),
+          NavigationDestination(icon: Icon(Icons.waves), label: 'バブレストラン'),
           NavigationDestination(
             icon: Icon(Icons.restaurant),
             label: 'FAMILIA KITCHEN',
