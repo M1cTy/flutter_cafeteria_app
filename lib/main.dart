@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 50),
+      duration: const Duration(milliseconds: 100),
       vsync: this,
     );
     _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
