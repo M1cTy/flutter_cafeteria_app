@@ -4,6 +4,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'menu_data.dart';
 import 'seat_map.dart';
 import 'cafeteria_info.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(const MainApp());
@@ -203,6 +205,37 @@ class _HomeScreenState extends State<HomeScreen>
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(),
                             child: const Text('閉じる'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const FaIcon(FontAwesomeIcons.github),
+                  tooltip: 'GitHub',
+                  onPressed: () {
+                    // GitHubリポジトリのURLを開く
+                    const url =
+                        'https://github.com/M1cTy/flutter_cafeteria_app';
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('GitHub'),
+                        content: Text(url),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('閉じる'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              // URLを開く
+                              // ignore: deprecated_member_use
+                              await launchUrl(Uri.parse(url));
+                            },
+                            child: const Text('ブラウザで開く'),
                           ),
                         ],
                       ),
