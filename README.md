@@ -1,5 +1,5 @@
 # flutter_cafeteria_app
 
-A new Flutter project.
+### View the demo online [click](https://flutter-cafeteria-app-web.netlify.app/)
 
 ![Home](assets/github/home.png)
