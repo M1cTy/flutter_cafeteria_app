@@ -13,11 +13,7 @@ const List<List<Map<String, String>>> menus = [
   [
     {'image': 'assets/images/menu1.png', 'name': 'タコライス', 'price': '¥700'},
     {'image': 'assets/images/menu1.png', 'name': 'ガパオライス', 'price': '¥750'},
-    {
-      'image': 'assets/images/menu1.png',
-      'name': 'グリーンカレー',
-      'price': '¥800',
-    },
+    {'image': 'assets/images/menu1.png', 'name': 'グリーンカレー', 'price': '¥800'},
     {'image': 'assets/images/menu1.png', 'name': 'サラダボウル', 'price': '¥500'},
   ],
   [
@@ -53,4 +49,20 @@ const List<List<Map<String, String>>> menus = [
       'soldOut': 'true',
     },
   ],
+];
+
+// 日替わりメニュー
+const List<List<Map<String, String>>> dailyMenus = [
+  [],
+  [],
+  [], // ふうりゅう
+  [], // Café Lounge
+  [
+    {
+      'name': '唐揚げカレー',
+      'image': 'assets/images/familia_daily_curry.webp',
+      'price': '¥650',
+      'soldOut': 'false',
+    },
+  ], // シダックス
 ];

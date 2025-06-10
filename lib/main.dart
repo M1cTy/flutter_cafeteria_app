@@ -120,6 +120,9 @@ class _HomeScreenState extends State<HomeScreen>
     final List<int> congestionData = congestionDataList[_selectedIndex];
     final timeLabels = ['9', '10', '11', '12', '13', '14', '15', '16', '17'];
 
+    // --- 日替わりメニュー追加 ---
+    final dailyMenusForSelected = dailyMenus[_selectedIndex];
+
     return Scaffold(
       // AppBarをSliverAppBarに変更
       body: FadeTransition(
@@ -528,6 +531,168 @@ class _HomeScreenState extends State<HomeScreen>
                               },
                             ), // ← ここを差し替え
                             const SizedBox(height: 24),
+                            // --- 日替わりメニュー追加 ---
+                            if (dailyMenusForSelected.isNotEmpty) ...[
+                              Text(
+                                "日替わりメニュー",
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Align(
+                                alignment: Alignment.topCenter,
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 600,
+                                  ),
+                                  child: GridView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: dailyMenusForSelected.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 16,
+                                          crossAxisSpacing: 16,
+                                          childAspectRatio: 1.5,
+                                        ),
+                                    itemBuilder: (context, index) {
+                                      final menu = dailyMenusForSelected[index];
+                                      final bool soldOut =
+                                          menu['soldOut'] == 'true';
+                                      return ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          backgroundColor: soldOut
+                                              ? Colors.grey[300]
+                                              : Colors.white,
+                                          foregroundColor: soldOut
+                                              ? Colors.grey
+                                              : Colors.black,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                          ),
+                                          elevation: 2,
+                                        ),
+                                        onPressed: soldOut ? null : () {},
+                                        child: Stack(
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
+                                                    child: ColorFiltered(
+                                                      colorFilter: soldOut
+                                                          ? ColorFilter.mode(
+                                                              Colors.black
+                                                                  .withOpacity(
+                                                                    0.3,
+                                                                  ),
+                                                              BlendMode.darken,
+                                                            )
+                                                          : ColorFilter.mode(
+                                                              Colors
+                                                                  .transparent,
+                                                              BlendMode
+                                                                  .multiply,
+                                                            ),
+                                                      child: Image.asset(
+                                                        menu['image']!,
+                                                        fit: BoxFit.cover,
+                                                        width: double.infinity,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 8.0,
+                                                      ),
+                                                  child: Text(
+                                                    menu['name']!,
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 8.0,
+                                                      ),
+                                                  child: Text(
+                                                    menu['price']!,
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 14,
+                                                    ),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                              ],
+                                            ),
+                                            if (soldOut)
+                                              Positioned.fill(
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black
+                                                        .withOpacity(0.4),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          16,
+                                                        ),
+                                                  ),
+                                                  child: const Text(
+                                                    '売り切れ',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 16,
+                                                      shadows: [
+                                                        Shadow(
+                                                          blurRadius: 4,
+                                                          color: Colors.black54,
+                                                          offset: Offset(1, 1),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
                             // --- ここからメニュー ---
                             Text(
                               "メニュー",
