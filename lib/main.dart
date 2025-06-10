@@ -45,44 +45,52 @@ class _HomeScreenState extends State<HomeScreen>
   final List<List<List<int>>> seatMatrices = [
     [
       [1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-      [0, 0, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [0, 0, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
       [1, 0, 0, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 1, 2, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 1, 1, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 2],
+      [0, 1, 2, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 2, 2, 0, 1],
+      [0, 1, 1, 1, 0, 1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 0, 2, 2, 0, 1],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 0, 0, 0, 0, 1],
     ],
     [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 2, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 2, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 2, 1, 2, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 2, 1, 1],
     ],
     [
       [1, 1, 2, 1, 1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 2, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 2, 1, 1, 1, 1],
     ],
     [
       [1, 1, 1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 2, 2, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1],
     ],
     [
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ],
+  ];
+
+  final List<List<int>> congestionDataList = [
+    [3, 14, 50, 96, 80, 31, 27, 20, 12], // バブレストラン
+    [2, 10, 40, 80, 70, 30, 25, 18, 5], // FAMILIA KITCHEN
+    [1, 8, 30, 60, 55, 20, 15, 10, 100], // ふうりゅう
+    [1, 5, 20, 40, 35, 15, 10, 8, 20], // Café Lounge
+    [2, 12, 45, 90, 75, 28, 32, 27, 51], // シダックス
   ];
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 50),
       vsync: this,
     );
     _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
@@ -107,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final menusForSelected = menus[_selectedIndex];
-    final congestionData = [3, 14, 50, 96, 80, 31, 27, 20, 12];
+    final List<int> congestionData = congestionDataList[_selectedIndex];
     final timeLabels = ['9', '10', '11', '12', '13', '14', '15', '16', '17'];
 
     return Scaffold(
@@ -150,33 +158,45 @@ class _HomeScreenState extends State<HomeScreen>
                           style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                         content: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // 画像をダイアログのトップに追加
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(
-                                  _getCafeteriaImageAsset(_selectedIndex),
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                  height: 160,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              ...info.body.map((e) {
-                                if (e.isEmpty) return const SizedBox(height: 8);
-                                return MarkdownBody(
-                                  data: e,
-                                  styleSheet: MarkdownStyleSheet(
-                                    p: const TextStyle(fontSize: 15),
-                                    strong: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                          child: Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 600),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // 画像の幅を明示的に制約
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: SizedBox(
+                                      width: 600,
+                                      child: AspectRatio(
+                                        aspectRatio: 16 / 9, // 画像のアスペクト比に合わせて調整
+                                        child: Image.asset(
+                                          _getCafeteriaImageAsset(
+                                            _selectedIndex,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                );
-                              }),
-                            ],
+                                  const SizedBox(height: 12),
+                                  ...info.body.map((e) {
+                                    if (e.isEmpty)
+                                      return const SizedBox(height: 8);
+                                    return MarkdownBody(
+                                      data: e,
+                                      styleSheet: MarkdownStyleSheet(
+                                        p: const TextStyle(fontSize: 15),
+                                        strong: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                         actions: [
@@ -504,11 +524,18 @@ class _HomeScreenState extends State<HomeScreen>
                                       ),
                                   itemBuilder: (context, index) {
                                     final menu = menusForSelected[index];
+                                    final bool soldOut =
+                                        menu['soldOut'] == true ||
+                                        menu['soldOut'] == 'true';
                                     return ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         padding: EdgeInsets.zero,
-                                        backgroundColor: Colors.white,
-                                        foregroundColor: Colors.black,
+                                        backgroundColor: soldOut
+                                            ? Colors.grey[300]
+                                            : Colors.white,
+                                        foregroundColor: soldOut
+                                            ? Colors.grey
+                                            : Colors.black,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
                                             16,
@@ -516,54 +543,102 @@ class _HomeScreenState extends State<HomeScreen>
                                         ),
                                         elevation: 2,
                                       ),
-                                      onPressed: () {},
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      onPressed: soldOut ? null : () {},
+                                      child: Stack(
                                         children: [
-                                          Expanded(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child: Image.asset(
-                                                menu['image']!,
-                                                fit: BoxFit.cover,
-                                                width: double.infinity,
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  child: ColorFiltered(
+                                                    colorFilter: soldOut
+                                                        ? ColorFilter.mode(
+                                                            Colors.black
+                                                                .withOpacity(
+                                                                  0.3,
+                                                                ),
+                                                            BlendMode.darken,
+                                                          )
+                                                        : ColorFilter.mode(
+                                                            Colors.transparent,
+                                                            BlendMode.multiply,
+                                                          ),
+                                                    child: Image.asset(
+                                                      menu['image']!,
+                                                      fit: BoxFit.cover,
+                                                      width: double.infinity,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                    ),
+                                                child: Text(
+                                                  menu['name']!,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                    ),
+                                                child: Text(
+                                                  menu['price']!,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14,
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                            ],
+                                          ),
+                                          if (soldOut)
+                                            Positioned.fill(
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.4),
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                child: const Text(
+                                                  '売り切れ',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 16,
+                                                    shadows: [
+                                                      Shadow(
+                                                        blurRadius: 4,
+                                                        color: Colors.black54,
+                                                        offset: Offset(1, 1),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0,
-                                            ),
-                                            child: Text(
-                                              menu['name']!,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.left,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0,
-                                            ),
-                                            child: Text(
-                                              menu['price']!,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
                                         ],
                                       ),
                                     );
@@ -615,16 +690,16 @@ String? getInfoIcon(String label) {
 String _getCafeteriaImageAsset(int index) {
   switch (index) {
     case 0:
-      return 'assets/pub.webp'; // バブレストラン
+      return 'assets/images/pub.webp'; // バブレストラン
     case 1:
-      return 'assets/familia.webp'; // FAMILIA KITCHEN
+      return 'assets/images/familia.webp'; // FAMILIA KITCHEN
     case 2:
-      return 'assets/furyu.webp'; // ふうりゅう
+      return 'assets/images/furyu.webp'; // ふうりゅう
     case 3:
-      return 'assets/cafe.webp'; // Café Lounge
+      return 'assets/images/cafe.webp'; // Café Lounge
     case 4:
-      return 'assets/shidax.webp'; // シダックス
+      return 'assets/images/cidax.webp'; // シダックス
     default:
-      return 'assets/pub.webp';
+      return 'assets/images/pub.webp';
   }
 }
