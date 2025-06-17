@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'menu_data.dart';
 import 'seat_map.dart';
 import 'cafeteria_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'cafeteria_status.dart';
+import 'cafeteria_image.dart';
+import 'cafeteria_menu_grid.dart';
 
 void main() {
   runApp(const MainApp());
@@ -177,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       child: AspectRatio(
                                         aspectRatio: 16 / 9, // 画像のアスペクト比に合わせて調整
                                         child: Image.asset(
-                                          _getCafeteriaImageAsset(
+                                          getCafeteriaImageAsset(
                                             _selectedIndex,
                                           ),
                                           fit: BoxFit.cover,
@@ -275,27 +277,10 @@ class _HomeScreenState extends State<HomeScreen>
                             // 混雑度のテキスト表示
                             Builder(
                               builder: (context) {
-                                // 最新の混雑度データを取得（例: 最後の値）
                                 final int latestCongestion =
                                     congestionData.isNotEmpty
                                     ? congestionData.last
                                     : 0;
-                                String congestionLabel;
-                                Color labelColor;
-                                if (latestCongestion >= 80) {
-                                  congestionLabel = 'とても混んでいます';
-                                  labelColor = Colors.red;
-                                } else if (latestCongestion >= 50) {
-                                  congestionLabel = 'やや混雑';
-                                  labelColor = Colors.orange;
-                                } else if (latestCongestion >= 20) {
-                                  congestionLabel = 'やや空いています';
-                                  labelColor = Colors.green;
-                                } else {
-                                  congestionLabel = '空いています';
-                                  labelColor = Colors.blueAccent;
-                                }
-                                // 利用者数・平均滞在時間データ（ページごと）
                                 final List<int> userCounts = [
                                   32,
                                   18,
@@ -314,205 +299,14 @@ class _HomeScreenState extends State<HomeScreen>
                                     userCounts[_selectedIndex];
                                 final int avgStay =
                                     avgStayMinutes[_selectedIndex];
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 8,
-                                    bottom: 8,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.circle,
-                                            color: labelColor,
-                                            size: 14,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            congestionLabel,
-                                            style: TextStyle(
-                                              color: labelColor,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Text(
-                                            '17時00分時点',
-                                            style: const TextStyle(
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.people,
-                                            size: 18,
-                                            color: Colors.grey[700],
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            '利用者数: $userCount人', // 仮の値。必要に応じてページごとに変更可
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 18),
-                                          Icon(
-                                            Icons.timer,
-                                            size: 18,
-                                            color: Colors.grey[700],
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            '平均滞在: $avgStay分', // 仮の値。必要に応じてページごとに変更可
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                return CafeteriaStatus(
+                                  latestCongestion: latestCongestion,
+                                  userCount: userCount,
+                                  avgStay: avgStay,
+                                  congestionData: congestionData,
+                                  timeLabels: timeLabels,
                                 );
                               },
-                            ),
-                            SizedBox(
-                              height: 180,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16.0,
-                                  horizontal: 16.0,
-                                ),
-                                child: LineChart(
-                                  LineChartData(
-                                    maxY: 100,
-                                    minY: 0,
-                                    gridData: FlGridData(show: true),
-                                    titlesData: FlTitlesData(
-                                      leftTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          reservedSize: 28,
-                                          getTitlesWidget: (value, meta) {
-                                            if (value % 50 == 0 &&
-                                                value != 0 &&
-                                                value >= 0 &&
-                                                value <= 100) {
-                                              return Text(
-                                                value.toInt().toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                textAlign: TextAlign.right,
-                                              );
-                                            }
-                                            return const SizedBox.shrink();
-                                          },
-                                          interval: 50,
-                                        ),
-                                      ),
-                                      bottomTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          getTitlesWidget: (value, meta) {
-                                            int idx = value.toInt();
-                                            if (idx % 2 == 0 &&
-                                                idx >= 0 &&
-                                                idx < timeLabels.length) {
-                                              return Text(
-                                                timeLabels[idx] + "時",
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              );
-                                            }
-                                            return const SizedBox.shrink();
-                                          },
-                                          reservedSize: 24,
-                                          interval: 1,
-                                        ),
-                                      ),
-                                      rightTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: false,
-                                        ),
-                                      ),
-                                      topTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: false,
-                                        ),
-                                      ),
-                                    ),
-                                    borderData: FlBorderData(show: false),
-                                    lineBarsData: [
-                                      LineChartBarData(
-                                        spots: List.generate(
-                                          congestionData.length,
-                                          (i) => FlSpot(
-                                            i.toDouble(),
-                                            congestionData[i].toDouble(),
-                                          ),
-                                        ),
-                                        isCurved: true,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                        barWidth: 4,
-                                        dotData: FlDotData(show: false),
-                                        belowBarData: BarAreaData(
-                                          show: true,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.2),
-                                        ),
-                                      ),
-                                    ],
-                                    extraLinesData: ExtraLinesData(
-                                      verticalLines: [
-                                        () {
-                                          final hour = 17;
-                                          final minute = 0;
-                                          final index =
-                                              (hour - 9) + (minute / 60);
-                                          if (index < 0 ||
-                                              index >= timeLabels.length)
-                                            return null;
-                                          return VerticalLine(
-                                            x: index,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
-                                            strokeWidth: 2,
-                                            dashArray: null,
-                                            label: VerticalLineLabel(
-                                              show: true,
-                                              alignment: Alignment.topLeft,
-                                              style: TextStyle(
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.primary,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              labelResolver: (line) => "Now",
-                                            ),
-                                          );
-                                        }(),
-                                      ].whereType<VerticalLine>().toList(),
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ),
                             const SizedBox(height: 24),
                             // --- ここまでグラフ追加 ---
@@ -708,139 +502,9 @@ class _HomeScreenState extends State<HomeScreen>
                                 constraints: const BoxConstraints(
                                   maxWidth: 600,
                                 ),
-                                child: GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  key: ValueKey<int>(_selectedIndex),
-                                  itemCount: menusForSelected.length,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        mainAxisSpacing: 16,
-                                        crossAxisSpacing: 16,
-                                        childAspectRatio: 1.5,
-                                      ),
-                                  itemBuilder: (context, index) {
-                                    final menu = menusForSelected[index];
-                                    final bool soldOut =
-                                        menu['soldOut'] == true ||
-                                        menu['soldOut'] == 'true';
-                                    return ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        backgroundColor: soldOut
-                                            ? Colors.grey[300]
-                                            : Colors.white,
-                                        foregroundColor: soldOut
-                                            ? Colors.grey
-                                            : Colors.black,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                        ),
-                                        elevation: 2,
-                                      ),
-                                      onPressed: soldOut ? null : () {},
-                                      child: Stack(
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  child: ColorFiltered(
-                                                    colorFilter: soldOut
-                                                        ? ColorFilter.mode(
-                                                            Colors.black
-                                                                .withOpacity(
-                                                                  0.3,
-                                                                ),
-                                                            BlendMode.darken,
-                                                          )
-                                                        : ColorFilter.mode(
-                                                            Colors.transparent,
-                                                            BlendMode.multiply,
-                                                          ),
-                                                    child: Image.asset(
-                                                      menu['image']!,
-                                                      fit: BoxFit.cover,
-                                                      width: double.infinity,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 8),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                    ),
-                                                child: Text(
-                                                  menu['name']!,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 16,
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.left,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                    ),
-                                                child: Text(
-                                                  menu['price']!,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 8),
-                                            ],
-                                          ),
-                                          if (soldOut)
-                                            Positioned.fill(
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.4),
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
-                                                ),
-                                                child: const Text(
-                                                  '売り切れ',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 16,
-                                                    shadows: [
-                                                      Shadow(
-                                                        blurRadius: 4,
-                                                        color: Colors.black54,
-                                                        offset: Offset(1, 1),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    );
-                                  },
+                                child: CafeteriaMenuGrid(
+                                  menus: menusForSelected,
+                                  selectedIndex: _selectedIndex,
                                 ),
                               ),
                             ),
@@ -873,31 +537,5 @@ class _HomeScreenState extends State<HomeScreen>
         ],
       ),
     );
-  }
-}
-
-// --- getInfoIconをmain.dartにもコピー ---
-String? getInfoIcon(String label) {
-  if (label.contains('営業時間')) return 'assets/clock.png';
-  if (label.contains('平均価格')) return 'assets/yen.png';
-  if (label.contains('決済方法')) return 'assets/payment.png';
-  return null;
-}
-
-// 号館ごとの画像アセットパスを返す関数を追加
-String _getCafeteriaImageAsset(int index) {
-  switch (index) {
-    case 0:
-      return 'assets/images/pub.webp'; // バブレストラン
-    case 1:
-      return 'assets/images/familia.webp'; // FAMILIA KITCHEN
-    case 2:
-      return 'assets/images/furyu.webp'; // ふうりゅう
-    case 3:
-      return 'assets/images/cafe.webp'; // Café Lounge
-    case 4:
-      return 'assets/images/cidax.webp'; // シダックス
-    default:
-      return 'assets/images/pub.webp';
   }
 }
