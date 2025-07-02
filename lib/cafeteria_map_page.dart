@@ -5,25 +5,53 @@ class CafeteriaMapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('学食マップ')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'キャンパス内の学食マップ',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-              // TODO: ここにマップ画像やウィジェットを追加
-              const Icon(Icons.map, size: 120, color: Colors.blueGrey),
-              const SizedBox(height: 16),
-              const Text('※マップ画像や詳細は今後追加予定です', style: TextStyle(fontSize: 16)),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('学食マップ'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.map), text: 'マップ'),
+              Tab(icon: Icon(Icons.info_outline), text: '詳細'),
             ],
           ),
+        ),
+        body: const TabBarView(
+          children: [
+            // マップタブ
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'キャンパス内の学食マップ',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    Icon(Icons.map, size: 120, color: Colors.blueGrey),
+                    SizedBox(height: 16),
+                    Text('※マップ画像や詳細は今後追加予定です', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+            // 詳細タブ
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Text(
+                  'ここに学食の詳細情報を追加できます',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
