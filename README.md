@@ -1,4 +1,4 @@
-# flutter_cafeteria_app
+# Gakusyoku NAVI
 
 ### View the demo online [click](https://flutter-cafeteria-app-web.netlify.app/)
 
